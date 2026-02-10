@@ -2,7 +2,7 @@ import pytest
 import pandas as pd
 import numpy as np
 from src.finance.metrics import calculate_historical_metrics
-from src.config import SETTINGS
+from config import SETTINGS
 
 def test_calculate_fcf():
     """

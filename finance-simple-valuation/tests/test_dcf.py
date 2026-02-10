@@ -2,7 +2,7 @@ import pytest
 import pandas as pd
 import numpy as np
 from src.finance.dcf import calculate_dcf, ValuationResult
-from src.config import ScenarioParams
+from config import ScenarioParams
 
 def test_dcf_calculation():
     """
@@ -18,9 +18,11 @@ def test_dcf_calculation():
     # Create scenario params
     scenario = ScenarioParams(
         revenue_growth=0.05,
+        ebit_margin=0.20,
         wacc=0.10,
         terminal_g=0.02,
         capex_pct_rev=0.1,
+        depreciation_pct_capex=0.8,
         nwc_pct_rev_change=0.1
     )
     
@@ -59,3 +61,21 @@ def test_dcf_calculation():
     # Equity Value
     expected_equity = expected_ev - net_debt
     assert np.isclose(result.equity_value, expected_equity)
+
+def test_dcf_invalid_g():
+    """
+    Test that DCF raises validation error if g >= wacc.
+    """
+    projections = pd.DataFrame([{"year": 2024, "fcf": 100}])
+    scenario = ScenarioParams(
+        revenue_growth=0.05,
+        ebit_margin=0.20,
+        wacc=0.05,
+        terminal_g=0.05, # Equal to WACC
+        capex_pct_rev=0.1,
+        depreciation_pct_capex=0.8,
+        nwc_pct_rev_change=0.1
+    )
+    
+    with pytest.raises(ValueError, match="must be less than WACC"):
+        calculate_dcf(projections, scenario, 0, "test")

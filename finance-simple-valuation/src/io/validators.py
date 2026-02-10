@@ -26,6 +26,17 @@ def validate_data(data: Dict[str, pd.DataFrame]) -> None:
         
         if missing:
             raise ValueError(f"Missing columns in {key}: {missing}")
-            
-    # Also check if years are aligned? For simplicity, we just check data loaded.
-    # A more robust check would ensure years match across files, but we keep it simple as requested.
+        
+        # Check specific constraints
+        # 1. Years in ascending order
+        if not df["year"].is_monotonic_increasing:
+             raise ValueError(f"Years in {key} must be sorted in ascending order.")
+             
+        # 2. No NaN in numeric columns (simple check)
+        numeric_cols = df.select_dtypes(include="number").columns
+        if df[numeric_cols].isnull().any().any():
+             raise ValueError(f"Found NaN values in numeric columns of {key}.")
+             
+        # 3. Check for duplicates in year
+        if df["year"].duplicated().any():
+             raise ValueError(f"Duplicate years found in {key}.")

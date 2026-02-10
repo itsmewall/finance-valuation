@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "finance-simple-valuation"
-version = "0.1.0"
-description = "A simple financial valuation tool."
+version = "0.2.0"
+description = "A clean financial valuation pipeline."
 readme = "README.md"
 authors = [{ name = "Your Name", email = "your.email@example.com" }]
 license = { text = "MIT" }
@@ -14,7 +14,6 @@ dependencies = [
     "pandas>=2.0.0",
     "numpy>=1.24.0",
     "matplotlib>=3.7.0",
-    "streamlit>=1.20.0",
     "pydantic>=2.0.0",
 ]
 
