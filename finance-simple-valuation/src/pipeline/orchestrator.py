@@ -9,7 +9,7 @@ from ..finance.scenarios import run_scenarios
 from ..finance.checks import check_projection_consistency
 from ..finance.sensitivity import calculate_sensitivity_grid
 from ..reporting.export import export_summary
-from ..reporting.plots import plot_sensitivity
+from ..reporting.plots import plot_all
 
 def log_message(message: str, log_file: Path) -> None:
     """
@@ -23,18 +23,17 @@ def log_message(message: str, log_file: Path) -> None:
 
 def run_all(base_dir: Path) -> None:
     """
-    Orchestrates the entire valuation pipeline in batch mode.
+    Orchestrates the entire valuation pipeline in professional batch mode.
     """
     data_dir = base_dir / "data"
     output_dir = base_dir / "outputs"
     output_dir.mkdir(exist_ok=True)
     
     log_file = output_dir / "run_log.txt"
-    # Clear log file on start
     with open(log_file, "w") as f:
         f.write(f"Run Log initialized at {datetime.now()}\n")
         
-    log_message("Starting Valuation Pipeline (Professional Mode)...", log_file)
+    log_message("Starting Valuation Pipeline (Executive Mode)...", log_file)
     
     # 1. Load Data
     log_message(f"Loading data from {data_dir}...", log_file)
@@ -71,13 +70,11 @@ def run_all(base_dir: Path) -> None:
     log_message("Running economic consistency checks...", log_file)
     
     for name, res in results.items():
-        # Check Terminal Share
         if res.terminal_share_warning:
             msg = f"[{name}] {res.terminal_share_warning}"
             all_warnings.append(msg)
             log_message(f"[WARN] {msg}", log_file)
             
-        # Check Economic Consistency
         scenario_warnings = check_projection_consistency(historical_df, res.projections, name)
         for w in scenario_warnings:
             all_warnings.append(w)
@@ -90,21 +87,27 @@ def run_all(base_dir: Path) -> None:
     if base_res:
         log_message("Calculating sensitivity grid (Base Case)...", log_file)
         sensitivity_data = calculate_sensitivity_grid(base_res.projections)
-        
-        # Log Driver Analysis
         log_message(f"[INSIGHT] {sensitivity_data['driver_analysis']}", log_file)
-        
-        # Generate Plot
-        log_message("Generating sensitivity plot...", log_file)
-        plot_sensitivity(sensitivity_data, output_dir)
     else:
         log_message("[WARNING] Base scenario not found, skipping sensitivity.", log_file)
     
-    # 7. Export All
-    log_message(f"Exporting comprehensive results to {output_dir}...", log_file)
-    export_summary(results, sensitivity_data, all_warnings, output_dir)
+    # 7. Generate All Plots
+    # This step now generates all requested charts (EV Composition, Waterfall, Lines, Heatmap)
+    log_message("Generating executive visualisations...", log_file)
+    chart_insights = {}
+    try:
+        chart_insights = plot_all(results, sensitivity_data, output_dir)
+        for chart_name, insight in chart_insights.items():
+            log_message(f"[PLOT] {chart_name}: {insight}", log_file)
+    except Exception as e:
+        log_message(f"[ERROR] Plot generation failed: {e}", log_file)
+        # Continue to export remaining data
     
-    # 8. Summary Log
+    # 8. Export Comprehensive Output
+    log_message(f"Exporting comprehensive results to {output_dir}...", log_file)
+    export_summary(results, sensitivity_data, all_warnings, chart_insights, output_dir)
+    
+    # 9. Summary Log
     log_message("VALUATION SUMMARY (Enterprise Value):", log_file)
     for name, res in results.items():
         log_message(f"- {name.capitalize()}: {res.enterprise_value:,.2f} ({SETTINGS.currency_unit})", log_file)

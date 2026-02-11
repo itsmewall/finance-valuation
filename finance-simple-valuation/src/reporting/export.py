@@ -5,10 +5,10 @@ from typing import Dict, Any, List
 from ..finance.dcf import ValuationResult
 from config import SETTINGS
 
-def export_summary(results: Dict[str, ValuationResult], sensitivity_data: Dict[str, Any], warnings: List[str], output_dir: Path) -> None:
+def export_summary(results: Dict[str, ValuationResult], sensitivity_data: Dict[str, Any], warnings: List[str], chart_insights: Dict[str, str], output_dir: Path) -> None:
     """
     Exports summary.json and projections.csv to the output directory.
-    Now includes sensitivity metrics and consistency warnings.
+    Now includes sensitivity metrics, consistency warnings, and chart insights.
     """
     summary_data = {}
     projections_list = []
@@ -57,6 +57,9 @@ def export_summary(results: Dict[str, ValuationResult], sensitivity_data: Dict[s
         "ev_max": sensitivity_data.get("ev_max"),
         "driver_analysis": sensitivity_data.get("driver_analysis")
     }
+
+    # Chart Insights
+    summary_data["chart_insights"] = chart_insights
 
     # Consistency Checks
     summary_data["consistency_warnings"] = warnings
