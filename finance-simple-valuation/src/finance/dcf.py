@@ -15,6 +15,7 @@ class ValuationResult:
     wacc: float
     terminal_g: float
     terminal_share_pct: float
+    terminal_share_warning: str
 
 def calculate_dcf(projections: pd.DataFrame, scenario: ScenarioParams, net_debt: float, scenario_name: str) -> ValuationResult:
     """
@@ -48,6 +49,10 @@ def calculate_dcf(projections: pd.DataFrame, scenario: ScenarioParams, net_debt:
     # Terminal Share Pct
     terminal_share_pct = pv_terminal / enterprise_value if enterprise_value != 0 else 0
     
+    warning = ""
+    if terminal_share_pct > 0.75:
+        warning = f"High dependence on Terminal Value ({terminal_share_pct:.1%}). Ensure perpetuity assumptions are defensible."
+    
     return ValuationResult(
         scenario_name=scenario_name,
         enterprise_value=enterprise_value,
@@ -58,5 +63,6 @@ def calculate_dcf(projections: pd.DataFrame, scenario: ScenarioParams, net_debt:
         projections=projections,
         wacc=wacc,
         terminal_g=g,
-        terminal_share_pct=terminal_share_pct
+        terminal_share_pct=terminal_share_pct,
+        terminal_share_warning=warning
     )
