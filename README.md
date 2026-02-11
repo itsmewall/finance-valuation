@@ -1,12 +1,40 @@
-# Finance Simple Valuation (Batch Pipeline)
+# Finance Valuation Pipeline
+Automated Discounted Cash Flow (DCF) valuation from financial statements.
 
-A pure Python pipeline for financial valuation (DCF) using CSV data.
-Generates deterministic outputs (JSON, CSV, PNG) without any web interface.
+## Overview
 
-## Installation
+This project implements a simplified valuation pipeline in Python. It processes historical financial data, projects future cash flows based on configurable scenarios, and calculates Enterprise Value using the Discounted Cash Flow (DCF) method. It is designed for educational purposes to demonstrate structural modeling logic and sensitivity analysis, rather than for professional equity research.
 
-1. **Clone the repository** (if applicable).
-2. **Create a virtual environment**:
+## Deliverables
+
+The pipeline automatically generates the following outputs in the `outputs/` directory:
+
+- **summary.json**: Detailed valuation report including Enterprise Value, Equity Value, and model assumptions for Base, Downside, and Upside scenarios.
+- **projections.csv**: Year-by-year financial forecast (Revenue, EBIT, NOPAT, CAPEX, FCF).
+- **sensitivity_ev.csv**: Matrix of Enterprise Values across varying WACC and Terminal Growth rates.
+- **plots/**: Visualizations of key valuation drivers.
+
+## Example Outputs
+
+### Sensitivity Analysis
+![Sensitivity Analysis](outputs/plots/sensitivity.png)
+Impact of WACC and Terminal Growth Rate on Enterprise Value.
+
+### Enterprise Value Composition
+![EV Composition](outputs/plots/ev_composition.png)
+Breakdown of value between the explicit forecast period and the terminal value.
+
+### Free Cash Flow Projection
+![FCF Projection](outputs/plots/fcf_projection.png)
+Projected Free Cash Flow trajectory across different scenarios.
+
+### EBIT to FCF Bridge
+![EBIT to FCF Bridge](outputs/plots/ebit_to_fcf_bridge.png)
+Waterfall chart illustrating the conversion of operational profit into free cash flow (Year 1).
+
+## How to Run
+
+1. **Create a virtual environment**:
    ```bash
    python -m venv venv
    # Windows:
@@ -14,57 +42,39 @@ Generates deterministic outputs (JSON, CSV, PNG) without any web interface.
    # Mac/Linux:
    source venv/bin/activate
    ```
-3. **Install dependencies**:
+
+2. **Install dependencies**:
    ```bash
    pip install pandas numpy matplotlib pydantic
-   # OR
-   pip install -e .
    ```
 
-## Usage
+3. **Execute the pipeline**:
+   ```bash
+   python run.py
+   ```
 
-### Run the Pipeline
-Execute the main script to process data and generate reports:
-```bash
-python run.py
+## Project Structure
+
+```text
+finance-valuation/
+├── run.py                 # Main execution entry point
+├── config.py              # Scenario configurations and assumptions
+├── data/                  # Input CSV files (Balance Sheet, Income Statement, Cash Flow)
+├── outputs/               # Generated reports, data, and plots
+├── src/                   # Source code
+│   ├── finance/           # Core valuation logic (DCF, metrics, projections)
+│   ├── io/                # Data loading and validation
+│   ├── pipeline/          # Orchestration logic
+│   └── reporting/         # Exporting results and plotting
+└── tests/                 # Unit tests
 ```
 
-This will:
-1. Load income statement, balance sheet, and cash flow CSVs from `data/`.
-2. Validate data consistency (years, columns).
-3. Project financials for 5 years (Base/Downside/Upside scenarios).
-4. Run DCF valuation for each scenario.
-5. Perform sensitivity analysis (WACC vs Terminal Growth).
-6. Export all results to `outputs/`.
+## Assumptions and Limitations
 
-## Outputs
-
-All generated files are located in the `outputs/` directory:
-
-- `summary.json`: Comprehensive valuation results including Enterprise Value, Equity Value, and key assumptions for each scenario.
-- `projections.csv`: Year-by-year projected financials (Revenue, EBIT, FCF, etc.) for all scenarios.
-- `sensitivity_ev.csv`: Matrix of Enterprise Values across different WACC and Terminal Growth rates.
-- `sensitivity.png`: Heatmap visualization of the sensitivity analysis.
-- `run_log.txt`: Detailed execution log with timestamps.
-
-## Configuration
-
-Settings are defined in `config.py`. You can adjust:
-- **Scenarios**: Growth rates, margins, WACC, etc. for Base, Downside, and Upside.
-- **Sensitivity Grid**: Range of WACC and Terminal Growth values.
-- **Global Params**: Tax rate, forecast years, etc.
-
-## Structure
-
-- `run.py`: Entry point.
-- `config.py`: Central configuration.
-- `src/`: Core logic modules.
-  - `pipeline/`: Orchestration.
-  - `finance/`: DCF, projections, metrics.
-  - `io/`: Data loading and validation.
-  - `reporting/`: Export logic.
-- `data/`: Input CSV files.
+- **Simplified Data**: The model uses consolidated annual data and simplified working capital logic.
+- **Explicit Assumptions**: Revenue growth, margins, and capital structure are driven by explicit inputs in `config.py`.
+- **Focus**: The priority is code structure, reproducibility, and sensitivity testing, not absolute valuation precision.
 
 ## Disclaimer
 
-This is a simplified valuation model for educational purposes. It relies on provided assumptions and input data. Not financial advice.
+This project is for educational purposes only and does not constitute financial advice or investment recommendation.
