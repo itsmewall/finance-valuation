@@ -1,0 +1,99 @@
+{
+    "base": {
+        "enterprise_value": 143225.41132701508,
+        "equity_value": 136645.41132701508,
+        "terminal_value": 168143.33217484687,
+        "pv_explicit": 43440.52754366084,
+        "pv_terminal": 99784.88378335425,
+        "wacc": 0.11,
+        "terminal_g": 0.03,
+        "terminal_share_pct": 0.6966981826676234,
+        "terminal_share_warning": "",
+        "assumptions": {
+            "operational": {
+                "revenue_growth": 0.05,
+                "ebit_margin": 0.28,
+                "capex_pct_rev": 0.15,
+                "nwc_pct_rev_change": 0.1,
+                "forecast_years": 5
+            },
+            "financial": {
+                "wacc": 0.11,
+                "terminal_g": 0.03,
+                "tax_rate": 0.34,
+                "net_debt_used": 6580.0
+            }
+        }
+    },
+    "downside": {
+        "enterprise_value": 82119.78976043212,
+        "equity_value": 75539.78976043212,
+        "terminal_value": 87116.01154551817,
+        "pv_explicit": 34836.70890945946,
+        "pv_terminal": 47283.080850972656,
+        "wacc": 0.13,
+        "terminal_g": 0.01,
+        "terminal_share_pct": 0.5757818059314507,
+        "terminal_share_warning": "",
+        "assumptions": {
+            "operational": {
+                "revenue_growth": 0.02,
+                "ebit_margin": 0.24,
+                "capex_pct_rev": 0.12,
+                "nwc_pct_rev_change": 0.15,
+                "forecast_years": 5
+            },
+            "financial": {
+                "wacc": 0.13,
+                "terminal_g": 0.01,
+                "tax_rate": 0.34,
+                "net_debt_used": 6580.0
+            }
+        }
+    },
+    "upside": {
+        "enterprise_value": 270286.2317286113,
+        "equity_value": 263706.2317286113,
+        "terminal_value": 334064.0666849183,
+        "pv_explicit": 53167.50975561951,
+        "pv_terminal": 217118.7219729918,
+        "wacc": 0.09,
+        "terminal_g": 0.04,
+        "terminal_share_pct": 0.8032918309764152,
+        "terminal_share_warning": "High dependence on Terminal Value (80.3%). Ensure perpetuity assumptions are defensible.",
+        "assumptions": {
+            "operational": {
+                "revenue_growth": 0.08,
+                "ebit_margin": 0.32,
+                "capex_pct_rev": 0.18,
+                "nwc_pct_rev_change": 0.08,
+                "forecast_years": 5
+            },
+            "financial": {
+                "wacc": 0.09,
+                "terminal_g": 0.04,
+                "tax_rate": 0.34,
+                "net_debt_used": 6580.0
+            }
+        }
+    },
+    "sensitivity_analysis": {
+        "ev_base": 122287.240686081,
+        "ev_min": 92944.83501730142,
+        "ev_max": 205525.2186662817,
+        "driver_analysis": "Sensitivity driven primarily by WACC changes."
+    },
+    "chart_insights": {
+        "ev_composition": "Terminal Value represents 69.7% of Enterprise Value in the Base case.",
+        "fcf_projection": "FCF grows at a CAGR of 5.0% over the projection period (Base Case).",
+        "ebit_to_fcf_bridge": "Cash conversion ratio (FCF/EBIT) is 53.6%.",
+        "sensitivity_wacc": "EV decreases by 43.9% as WACC increases from 9.0% to 14.0%.",
+        "sensitivity_g": "EV increases by 20.1% as Growth increases from 1.0% to 3.5%."
+    },
+    "consistency_warnings": [
+        "[base] Last year revenue growth (5.0%) is higher than terminal growth (3.0%). This implies potentially aggressive terminal value assumption.",
+        "[downside] Last year revenue growth (2.0%) is higher than terminal growth (1.0%). This implies potentially aggressive terminal value assumption.",
+        "[upside] High dependence on Terminal Value (80.3%). Ensure perpetuity assumptions are defensible.",
+        "[upside] Last year revenue growth (8.0%) is higher than terminal growth (4.0%). This implies potentially aggressive terminal value assumption."
+    ]
+}
